@@ -8,4 +8,4 @@ Keep in mind that this game is still in Alpha/Pre-Alpha state of production, so 
 
 ### Screenshots:
 
-![screen1] (Screenshots/1.png)
+![screen1](Screenshots/1.png)
