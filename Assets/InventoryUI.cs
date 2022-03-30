@@ -46,14 +46,9 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    void RemoveItemUI() {
-        int temp = inventory.inventoryArray.LastUpdated;
-        if(temp != -1) {
-            equipCells[temp].DelItem();
-        }
-        else {
-            Debug.LogError("lastDeleted == -1!");
-        }
+    void RemoveItemUI(List<int> indexes) {
+        foreach(int index in indexes)
+            equipCells[index].DelItem();
     }
 
     void UpdateItemUI(List<int> indexes)

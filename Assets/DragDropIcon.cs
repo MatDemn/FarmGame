@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class DragDropIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -13,18 +14,18 @@ public class DragDropIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public InventorySlot invSlot;
 
-    CanvasGroup canvasGroup;
+    Canvas canvas;
 
-    public int indexRef;
+    CanvasGroup canvasGroup;
     // Start is called before the first frame update
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         if(dragDropPlaceHolder == null)
             dragDropPlaceHolder = GameObject.Find("DragIconPlaceholder").transform;
-        invSlot = transform.parent.parent.GetComponent<InventorySlot>();
+        invSlot = transform.parent.GetComponent<InventorySlot>();
         canvasGroup = GetComponent<CanvasGroup>();
-        indexRef = transform.parent.parent.GetSiblingIndex();
+        canvas ??= GameObject.Find("UI").GetComponent<Canvas>();
     }
 
     // Update is called once per frame
@@ -67,7 +68,9 @@ public class DragDropIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     }
 
     public void OnDrag(PointerEventData pointerData) {
-        rectTransform.anchoredPosition += pointerData.delta;
+        Vector2 pos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, pointerData.position, canvas.worldCamera, out pos);
+        rectTransform.transform.position = canvas.transform.TransformPoint(pos);
     }
 
     public void OnEndDrag(PointerEventData pointerData) {

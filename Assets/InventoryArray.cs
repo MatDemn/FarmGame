@@ -9,18 +9,12 @@ public class InventoryArray
     // From up to down, from left to right. First valid place for new item
     private int firstFreePlace_;
 
-    private int lastUpdated_;
-
-    public int LastUpdated {
-        get{ return lastUpdated_; }
-    }
-
     [SerializeField]
     private InvSlotItem[] inventoryArray_;
 
     public InvSlotItem this[int i]{
         get {
-            if(i < 0 || i >= TotalCapacity) {
+            if(i < 0 || i >= Length) {
                 Debug.LogError($"IndexOutOfBounds: {i}");
             }
             return inventoryArray_[i];
@@ -29,7 +23,7 @@ public class InventoryArray
 
     private int freeCapacity_;
 
-    public int TotalCapacity
+    public int Length
     {
         get => inventoryArray_.Length;
     }
@@ -39,10 +33,9 @@ public class InventoryArray
         if(size < 1) {
             throw new System.Exception("Wrong size of InventoryArray. Need to be >0");
         }
-        lastUpdated_ = -1;
         firstFreePlace_ = 0;
         initInventory(size);
-        freeCapacity_ = TotalCapacity;
+        freeCapacity_ = Length;
     }
 
     void initInventory(int size) {
@@ -85,8 +78,7 @@ public class InventoryArray
         result.Add(firstFreePlace_);
         inventoryArray_[firstFreePlace_] = itemSlotToAdd;
         freeCapacity_ -= 1;
-        lastUpdated_ = firstFreePlace_;
-        UpdateFirstFreeSpace();
+        UpdateFirstFreeSpace(this);
         return result;
     }
 
@@ -125,8 +117,7 @@ public class InventoryArray
             inventoryArray_[toIndex].copyRefs(inventoryArray_[index]);
             inventoryArray_[index].ClearSlot();
 
-            lastUpdated_ = firstFreePlace_;
-            UpdateFirstFreeSpace();
+            UpdateFirstFreeSpace(this);
             return true;
         }
     }
@@ -171,8 +162,8 @@ public class InventoryArray
             inv2[indexTo].copyRefs(inv1[indexFrom]);
             inv1[indexFrom].ClearSlot();
 
-            //lastUpdated_ = firstFreePlace_;
-            //UpdateFirstFreeSpace();
+            UpdateFirstFreeSpace(inv1.inventoryArray);
+            UpdateFirstFreeSpace(inv2.inventoryArray);
             return true;
         }
     }
@@ -188,20 +179,19 @@ public class InventoryArray
         if(index < firstFreePlace_ || firstFreePlace_ == -1) {
             firstFreePlace_ = index;
         }
-        lastUpdated_ = index;
         return true;
     }
 
-    void UpdateFirstFreeSpace() {
-        firstFreePlace_ = searchForNextFreeSpace();
-        if(firstFreePlace_ == -1) {
-            freeCapacity_ = 0;
+    static void UpdateFirstFreeSpace(InventoryArray inventoryArray) {
+        inventoryArray.firstFreePlace_ = searchForNextFreeSpace(inventoryArray);
+        if(inventoryArray.firstFreePlace_ == -1) {
+            inventoryArray.freeCapacity_ = 0;
         }
     }
 
-    int searchForNextFreeSpace() {
-        for(int i = 0; i < inventoryArray_.Length; i++) {
-            if(inventoryArray_[i].item == null) return i;
+    static int searchForNextFreeSpace(InventoryArray inventoryArray) {
+        for(int i = 0; i < inventoryArray.Length; i++) {
+            if(inventoryArray[i].item == null) return i;
         }
         return -1;
     }

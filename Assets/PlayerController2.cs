@@ -26,7 +26,8 @@ public class PlayerController2 : MonoBehaviour
 
         runSpeed = 3f;
 
-        LockCamera(false);
+        Debug.LogWarning("CamLock should be false in PlayerController2!");
+        LockCamera(true);
     }
 
     // Update is called once per frame

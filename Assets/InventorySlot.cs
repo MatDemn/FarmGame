@@ -11,7 +11,9 @@ public class InventorySlot : Slot, IPointerEnterHandler, IPointerExitHandler, ID
     public Canvas canvas;
     public InvSlotItem invSlotItem;
 
-    public static Inventory inventory;
+    public GameObject inventoryObj;
+
+    public Inventory inventory;
     public Image icon;
 
     public int cellIndex;
@@ -31,6 +33,13 @@ public class InventorySlot : Slot, IPointerEnterHandler, IPointerExitHandler, ID
             inventory = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Inventory>();
         }
         invSlotItem = inventory.inventoryArray[cellIndex];
+
+        inventory = inventoryObj.GetComponent<Inventory>(); 
+
+        if(inventory == null)
+        {
+            Debug.LogError($"No Inventory Ref! {gameObject.name}");
+        }
     }
 
     // Update is called once per frame
@@ -95,8 +104,21 @@ public class InventorySlot : Slot, IPointerEnterHandler, IPointerExitHandler, ID
     public void OnDrop(PointerEventData eventData) {
         DragDropIcon dragDropRef = eventData.pointerDrag.GetComponent<DragDropIcon>();
         if (dragDropRef != null) {
-            Debug.Log("Transfer should proceed here...");
+
+            if (DragDropTransfer(dragDropRef, this))
+                return;
+            Debug.LogWarning("OnDrop Transfer failed...");
         }
+    }
+
+    bool DragDropTransfer(DragDropIcon dragDropIcon, InventorySlot invSlotDest)
+    {
+        Inventory fromInv = dragDropIcon.invSlot.inventory;
+        Inventory toInv = invSlotDest.inventory;
+        int indexFrom = dragDropIcon.invSlot.cellIndex;
+        int indexTo = cellIndex;
+
+        return Inventory.Transfer(fromInv, toInv, indexFrom, indexTo);
     }
 
 
