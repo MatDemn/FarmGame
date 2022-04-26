@@ -22,7 +22,6 @@ public class InventoryUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inventory = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Inventory>();
         inventory.onItemAddedCallback += AddItemUI;
         inventory.onItemDeletedCallback += RemoveItemUI;
         inventory.onItemUpdatedCallback += UpdateItemUI;

@@ -11,8 +11,6 @@ public class InventorySlot : Slot, IPointerEnterHandler, IPointerExitHandler, ID
     public Canvas canvas;
     public InvSlotItem invSlotItem;
 
-    public GameObject inventoryObj;
-
     public Inventory inventory;
     public Image icon;
 
@@ -24,19 +22,17 @@ public class InventorySlot : Slot, IPointerEnterHandler, IPointerExitHandler, ID
 
     public static Action OnMouseExit;
 
+    [SerializeField]
+    bool droppableSlot;
+
     // Start is called before the first frame update
     void Start()
     {
         canvas = GameObject.Find("UI").GetComponent<Canvas>();
-        cellIndex = transform.GetSiblingIndex();
-        if(inventory == null) {
-            inventory = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Inventory>();
-        }
+
         invSlotItem = inventory.inventoryArray[cellIndex];
 
-        inventory = inventoryObj.GetComponent<Inventory>(); 
-
-        if(inventory == null)
+        if (inventory == null)
         {
             Debug.LogError($"No Inventory Ref! {gameObject.name}");
         }
@@ -103,7 +99,7 @@ public class InventorySlot : Slot, IPointerEnterHandler, IPointerExitHandler, ID
 
     public void OnDrop(PointerEventData eventData) {
         DragDropIcon dragDropRef = eventData.pointerDrag.GetComponent<DragDropIcon>();
-        if (dragDropRef != null) {
+        if (dragDropRef != null && droppableSlot) {
 
             if (DragDropTransfer(dragDropRef, this))
                 return;

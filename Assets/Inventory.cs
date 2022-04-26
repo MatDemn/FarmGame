@@ -37,10 +37,10 @@ public class Inventory : MonoBehaviour
     IEnumerator debugAddToInventory() {
         Debug.LogWarning("Debug needs to be removed...");
         yield return new WaitForSeconds(1);
-        if (gameObject.name == "Player")
+        if (gameObject.name != "Player")
         {
             Add(new InvSlotItem(debugItemRef, 3));
-            Add(new InvSlotItem(debugItemRef, 1));
+            //Add(new InvSlotItem(debugItemRef, 1));
         }
     }
 

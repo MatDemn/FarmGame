@@ -308,11 +308,11 @@ MonoBehaviour:
     item: {fileID: 0}
     quantity: 0
     maxItemQuantity: 0
-  inventoryObj: {fileID: 0}
   inventory: {fileID: 0}
   icon: {fileID: 7605478531775670890}
   cellIndex: 0
   quantityText: {fileID: 1142401278966559551}
+  droppableSlot: 1
 --- !u!222 &2409755297688407105
 CanvasRenderer:
   m_ObjectHideFlags: 0
